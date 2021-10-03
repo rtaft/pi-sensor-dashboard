@@ -1,0 +1,1 @@
+SENSOR_CONFIG_FILE="sensors.json"

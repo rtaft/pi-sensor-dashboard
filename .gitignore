@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+todo.txt
+sync.sh
+old
+.vscode
+temp
+tmp
