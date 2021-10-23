@@ -1,5 +1,5 @@
 export class Sensor {
-    id_: string;
+    sensor_id: string;
     name: string;
     units: string;
     sensor_type: string;

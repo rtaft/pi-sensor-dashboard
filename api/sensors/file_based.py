@@ -1,5 +1,11 @@
 import re
-from sensors.sensor import Sensor
+from sensors.sensor import Sensor, SensorSchema
+from marshmallow import fields
+
+class FileBasedSchema(SensorSchema):
+    path = fields.String(required=True, allow_none=False, metadata=dict(fieldname="Path", notes="Path to sensor readings file."))
+    regexp = fields.String(required=False, allow_none=True, metadata=dict(fieldname="Regexp", notes="Regular Expression for parsing the file"))
+    factor = fields.Float(required=False, allow_none=True, metadata=dict(fieldname="Factor", notes="Multiple value by this number to get actual value."))
 
 class FileBasedSensor(Sensor):
     def __init__(self, units=None, name=None, path=None, regexp=None, factor=None):

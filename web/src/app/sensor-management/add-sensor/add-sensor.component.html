@@ -1,0 +1,27 @@
+<h2 class="header">Add New Sensor</h2>
+<form class="example-form" [formGroup]="formGroup">
+    <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>Sensor Type</mat-label>
+        <mat-select name="sensorType" formControlName="sensor_type">
+            <mat-option *ngFor="let sensor of availableSensorsMap | keyvalue" [value]="sensor.key">
+            {{sensor.value}}
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="formGroup.controls['sensor_type'].hasError('required')">
+            Required
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="example-full-width">
+        <mat-label>Sensor Name</mat-label>
+        <input matInput name="sensorName" formControlName="name">
+        <mat-error *ngIf="formGroup.controls['name'].hasError('required')">
+            Required
+        </mat-error>
+    </mat-form-field>
+
+    <app-ds18b20 *ngIf="sensorType == 'sensors.ds18b20.DS18B20'" [formGroup]="formGroup"></app-ds18b20>
+    <app-file-based *ngIf="sensorType == 'sensors.file_based.FileBasedSensor'" [formGroup]="formGroup"></app-file-based>
+
+    <button mat-raised-button (click)="submit()" color="primary" class="add-button">Add</button>
+</form>

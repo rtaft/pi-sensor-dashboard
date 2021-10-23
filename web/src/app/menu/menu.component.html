@@ -1,8 +1,8 @@
 <mat-toolbar color="primary">
-    <button mat-button [matMenuTriggerFor]="menu">Menu</button>
+    <button mat-button [matMenuTriggerFor]="menu">Options</button>
     <mat-menu #menu="matMenu">
-        <button mat-menu-item>Item 1</button>
-        <button mat-menu-item>Item 2</button>
+        <button mat-menu-item routerLink="sensor-management" routerLinkActive="active">Sensor Management</button>
+        <button mat-menu-item routerLink="sensor-management/new">New Sensor</button>
     </mat-menu>
 </mat-toolbar>
 

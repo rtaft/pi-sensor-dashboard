@@ -1,0 +1,10 @@
+<mat-form-field appearance="fill" class="example-full-width">
+    <mat-label>Sensor File Path</mat-label>
+    <input matInput [formControl]="formControl">
+    <mat-error *ngIf="formControl.hasError('required')">
+        Required
+    </mat-error>
+    <mat-error *ngIf="formControl.hasError('pattern')">
+        Must be a valid unix path.
+    </mat-error>
+</mat-form-field>

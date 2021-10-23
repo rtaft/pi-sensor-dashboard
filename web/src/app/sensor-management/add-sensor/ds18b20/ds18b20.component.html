@@ -1,0 +1,11 @@
+<mat-form-field [formGroup]="formGroup" appearance="fill" class="example-full-width">
+    <mat-label>Sensor</mat-label>
+    <mat-select name="device" [formControl]="formControl">
+        <mat-option *ngFor="let sensor of available" [value]="sensor">
+        {{sensor}}
+        </mat-option>
+    </mat-select>
+    <mat-error *ngIf="formGroup.controls['device'].hasError('required')">
+        Required
+    </mat-error>
+</mat-form-field>

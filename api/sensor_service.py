@@ -5,6 +5,7 @@ from app_config import save_config, get_config, SENSOR_CONFIG_FILE
 import database_manager
 import time
 import json
+import uuid
 
 
 class SensorService:
@@ -16,13 +17,22 @@ class SensorService:
         self.sensor_config = get_config()
         for config in self.sensor_config:
             sensor = self.create_sensor(config)
-            self.sensors[sensor.get_id()] = sensor
+            self.sensors[sensor.get_sensor_id()] = sensor
 
     def create_sensor(self, config):
         sensor_class = self.get_class(config['sensor_type'])
         sensor = sensor_class()
         sensor.set_config(config)
+
+        if not sensor.get_sensor_id():
+            sensor.sensor_id = self.generate_sensor_id()
         return sensor
+
+    def generate_sensor_id(self):
+        sensor_id = None
+        while not sensor_id or sensor_id in self.sensors:
+            sensor_id = uuid.uuid4().hex[-6:]
+        return sensor_id
 
     def connect_db(self):
         pass
@@ -38,10 +48,10 @@ class SensorService:
         self.connect_mq()
         while True:
             for sensor in self.sensors.values():
-                message = dict(time=time.time(), id=sensor.get_id(), name=sensor.get_name(), value=sensor.get_value(), units=sensor.get_units())
+                message = dict(time=time.time(), id=sensor.get_sensor_id(), name=sensor.get_name(), value=sensor.get_value(), units=sensor.get_units())
                 message_json =  json.dumps(message)
                 self.channel.basic_publish(exchange='', routing_key='sensor_readings', body=message_json)
-                print('{} {} {} {} {}'.format(time.time(), sensor.get_id(), sensor.get_name(), sensor.get_value(), sensor.get_units()))
+                print('{} {} {} {} {}'.format(time.time(), sensor.get_sensor_id(), sensor.get_name(), sensor.get_value(), sensor.get_units()))
             time.sleep(1)
     
     def run_collection_service(self):
@@ -49,8 +59,8 @@ class SensorService:
         while True:
             for sensor in list(self.sensors.values()):
                 # if its time to poll sensor
-                reading = dict(time=time.time(), id=sensor.get_id(), name=sensor.get_name(), value=sensor.get_value(), units=sensor.get_units())
-                self.readings[sensor.get_id()] = reading
+                reading = dict(time=time.time(), id=sensor.get_sensor_id(), name=sensor.get_name(), value=sensor.get_value(), units=sensor.get_units())
+                self.readings[sensor.get_sensor_id()] = reading
             time.sleep(1)
     
     def get_reading(self, sensor_id):
@@ -72,8 +82,8 @@ class SensorService:
             self.sensors[sensor_id].set_config(config)
         else:
             sensor = self.create_sensor(config)
-            self.sensors[sensor.get_id()] = sensor
-            sensor_id = sensor.get_id()
+            self.sensors[sensor.get_sensor_id()] = sensor
+            sensor_id = sensor.get_sensor_id()
         save_config(SENSOR_CONFIG_FILE, self.get_config())
         return sensor_id
     

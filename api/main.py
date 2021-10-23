@@ -8,8 +8,7 @@ from threading import Thread
 
 import app_config
 from api.restful import API, APP #, SOCK
-import pub.sensor.sensor
-import pub.sensor.reading
+from routing import route
 
 
 def main():
@@ -19,12 +18,7 @@ def main():
     flaskThread = Thread(target=APP.run, daemon=True, kwargs=kwargs).start()
     sensor_service.run_collection_service()
 
-def route(sensor_service):
-    kwargs = {'sensor_service': sensor_service}
-    # API.route('/reading', methods=['GET'], resource_class_kwargs=kwargs)
-    API.add_resource(pub.sensor.reading.Reading, '/api/reading/<sensor_id>', methods=['GET'], resource_class_kwargs=kwargs)
-    API.add_resource(pub.sensor.sensor.SensorsConfig, '/api/sensors', '/api/sensors/<sensor_id>', methods=['GET', 'POST', 'PUT', 'DELETE'], resource_class_kwargs=kwargs)
-    #API.add_resource(pub.sensor.sensor.SensorsConfig, '/api/sensors/<sensor_id>', methods=['PUT', 'DELETE'], resource_class_kwargs=kwargs)
+
 
 if __name__ == "__main__": 
     main()

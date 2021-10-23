@@ -1,13 +1,18 @@
-import uuid
+from marshmallow import Schema, fields
+
+class SensorSchema(Schema):
+    name = fields.String(required=True, allow_none=False, metadata=dict(fieldname="Name", notes="Name of the sensor."))
+    units = fields.String(required=False, allow_none=True, metadata=dict(fieldname="Units", notes="Units the sensor is in."))
+
 
 class Sensor:
-    def __init__(self, name=None, units=None):
+    def __init__(self, sensor_id=None, name=None, units=None):
         self.units = units
-        self.id_ = uuid.uuid4().hex
+        self.sensor_id = sensor_id;
         self.name = name
 
-    def get_id(self):
-        return self.id_
+    def get_sensor_id(self):
+        return self.sensor_id
 
     def get_name(self):
         return self.name
